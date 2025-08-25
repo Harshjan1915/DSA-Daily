@@ -1,0 +1,33 @@
+name: Daily LeetCode Commit
+
+on:
+  schedule:
+    - cron: "0 5 * * *"   # Runs daily at 5:00 UTC
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run script
+        run: python Dsa.py
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "HarshBot"
+          git config --global user.email "harshjangid085236@gmail.com"
+          git add .
+          git commit -m "Daily LeetCode: $(date '+%Y-%m-%d')" || echo "No changes to commit"
+          git push
